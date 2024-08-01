@@ -30,9 +30,29 @@ export async function getBookById(id) {
   return result.rows[0] || null;
 }
 
-export async function createBook(book) {
+export async function createBook(title, published_date, author_id) {
   // Query the database to create a book and return the newly created book
+  const queryText =
+    "INSERT INTO books (title, published_date, author_id) VALUES ($1, $2, $3) RETURNING *";
+
+  // Create another variable to store the new book, use await pool.query to send the query to the database(queryText)
+  const newBook = await pool.query(queryText, [
+    title,
+    published_date,
+    author_id,
+  ]);
+
+  // Return newly created book
+  return newBook.rows[0];
+  console.log("Query Result:", newBook);
 }
+
+// const newBook = await createBook(
+//   "Murder on the Orient Express",
+//   "1934-01-01",
+//   4
+// );
+// console.log(newBook);
 
 export async function updateBookById(id, updates) {
   // Query the database to update a book and return the newly updated book or null
